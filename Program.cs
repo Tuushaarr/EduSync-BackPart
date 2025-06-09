@@ -17,7 +17,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "https://localhost:3000") // Add both HTTP and HTTPS
+                          policy.WithOrigins(
+                              "http://localhost:3000",
+                              "https://localhost:3000",
+                              "https://nice-grass-01890ff00.6.azurestaticapps.net"
+                          ) // Add both HTTP and HTTPS and production static app
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials(); // Add this if you're using authentication/cookies
