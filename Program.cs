@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using EduSync.Data;
+using EduSync.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<EduSyncDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddSingleton<EventHubSender>();
 
 // 2. Add CORS services and define a policy
 builder.Services.AddCors(options =>
@@ -17,7 +19,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000", "https://localhost:3000") // Add both HTTP and HTTPS
+                          policy.WithOrigins(
+                              "http://localhost:3000",
+                              "https://localhost:3000",
+                              "https://nice-grass-01890ff00.6.azurestaticapps.net"
+                          ) // Add both HTTP and HTTPS and production static app
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials(); // Add this if you're using authentication/cookies
